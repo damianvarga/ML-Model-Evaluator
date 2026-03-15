@@ -24,3 +24,6 @@
 ## Notes
 - The dataset here is synthetic but uses plausible rules (see src/create_dataset.py if you want to regenerate). Columns required: age (int), sex (male/female), fare (float), class (first/second/third), survived (0/1).
 - Pipelines handle categorical encoding and numeric scaling. The app logs results to experiments.csv and prints example predictions.
+
+## About
+This project was developed by me, with significant assistance from AI tools such as GitHub Copilot, Qodo and ChatGPT.
