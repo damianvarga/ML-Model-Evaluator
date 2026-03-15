@@ -1,0 +1,3 @@
+model,accuracy,timestamp
+LogisticRegression,0.65,2026-03-15 14:33:02.141907
+RandomForest,0.58,2026-03-15 14:33:02.186020
