@@ -56,7 +56,7 @@ preprocess.py # Train/test split + validation \
 train.py # Model pipelines and training \
 evaluate.py # Evaluation metrics \
 tracker.py # Experiment logging system \
-create_dataset.py # Dataset generator (optional) \
+create_dataset.py # Dataset generator (optional) 
 
 main.py # Pipeline entry point \
 experiments.csv # Logged experiment results
