@@ -15,6 +15,7 @@ def split_data(df, target):
     X = df.drop(columns=[target])
     y = df[target]
 
+    # If you want to create the same output every time, you can set a random_state parameter here
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, stratify=y
     )
