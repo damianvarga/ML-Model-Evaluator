@@ -1,29 +1,100 @@
-# Titanic Survival Predictor
+# ML Model Comparison Pipeline
+
+A lightweight machine learning framework for training, comparing, and tracking classification models using structured pipelines.
+
+This project demonstrates a complete ML workflow including preprocessing, model training, evaluation, and experiment tracking.
+
+---
 
 ## Overview
-- This project trains simple ML models to predict Titanic survival using a synthetic dataset shaped like the classic Titanic features: age, sex, fare, class, survived.
 
-## Project structure
-- data/dataset.csv: Input CSV.
-- src/
-  - load_data.py: CSV loader.
-  - preprocess.py: Train/test split with target validation and stratification.
-  - train.py: Pipelines with preprocessing (OneHot + StandardScaler) and two models: LogisticRegression and RandomForest.
-  - evaluate.py: Accuracy metric.
-  - tracker.py: Appends experiment results to experiments.csv.
-- main.py: Orchestrates training/evaluation, prints sample predictions.
+The goal of this project is to build a reusable and modular machine learning pipeline that can:
 
-## Setup
-1) Python 3.10+ recommended.
-2) Install dependencies
-   pip install -r requirements.txt
+- Load and preprocess structured tabular data
+- Train multiple classification models
+- Evaluate model performance consistently
+- Track experiments for comparison
 
-## Run
-   python main.py
+The dataset used is a synthetic Titanic-style dataset designed to simulate realistic classification features.
+
+---
+
+## Features
+
+- End-to-end ML pipeline (data → preprocessing → training → evaluation)
+- Automatic handling of categorical and numerical features
+- Feature preprocessing:
+  - OneHot encoding for categorical variables
+  - Standard scaling for numerical features
+- Model comparison:
+  - Logistic Regression
+  - Random Forest Classifier
+- Experiment tracking system (logs results to CSV)
+- Reproducible synthetic dataset generation
+
+---
+
+## Models Used
+
+- Logistic Regression
+- Random Forest Classifier
+
+### Evaluation Metric
+
+- Accuracy
+
+---
+
+## Project Structure
+
+data/
+dataset.csv # Synthetic dataset
+
+src/
+load_data.py # Data loading utilities
+preprocess.py # Train/test split + validation
+train.py # Model pipelines and training
+evaluate.py # Evaluation metrics
+tracker.py # Experiment logging system
+create_dataset.py # Dataset generator (optional)
+
+main.py # Pipeline entry point
+experiments.csv # Logged experiment results
+
+---
+
+## Installation & Usage
+
+### 1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Run the pipeline
+
+```bash
+python main.py
+```
+
+## Example output
+
+LogisticRegression accuracy: 0.7400
+RandomForest accuracy: 0.5900
+Best model: LogisticRegression (accuracy=0.7400)
+
+Sample predictions (1=survived, 0=did not survive):
+{'age': 25, 'sex': 'female', 'fare': 80.0, 'class': 'first'} => pred=1 prob=0.810
+{'age': 40, 'sex': 'male', 'fare': 15.0, 'class': 'third'} => pred=0 prob=0.272
+{'age': 6, 'sex': 'female', 'fare': 30.0, 'class': 'second'} => pred=1 prob=0.628
+
+## Author
+
+This project was independently developed as a machine learning learning and experimentation framework.
+
+AI tools (e.g., ChatGPT, GitHub Copilot) were used as coding assistance for debugging and implementation support.
 
 ## Notes
-- The dataset here is synthetic but uses plausible rules (see src/create_dataset.py if you want to regenerate). Columns required: age (int), sex (male/female), fare (float), class (first/second/third), survived (0/1).
-- Pipelines handle categorical encoding and numeric scaling. The app logs results to experiments.csv and prints example predictions.
 
-## About
-This project was developed by me, with significant assistance from AI tools such as GitHub Copilot, Qodo and ChatGPT.
+Dataset is synthetic but structured to mimic real-world classification problems. 
+The project is designed for learning, experimentation, and model comparison workflows.
