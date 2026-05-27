@@ -3,6 +3,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
 import pandas as pd
 
 
@@ -31,25 +32,65 @@ def _build_preprocessor(X: pd.DataFrame) -> ColumnTransformer:
     return preprocessor
 
 
-def train_logistic(X_train, y_train):
+def train_logistic(X_train, y_train):    
     preprocessor = _build_preprocessor(X_train)
-    clf = LogisticRegression(max_iter=1000)
-
-    model = Pipeline(steps=[
+    
+    param_grid = {
+        'model__C': [0.1, 1, 10, 100],
+        'model__l1_ratio': [0],
+        'model__solver': ['lbfgs', 'liblinear'],
+        'model__max_iter': [1000, 2000],
+    }
+    
+    base_model = Pipeline(steps=[
         ("preprocess", preprocessor),
-        ("model", clf),
+        ("model", LogisticRegression(random_state=42)),
     ])
-    model.fit(X_train, y_train)
-    return model
+    
+    grid_search = GridSearchCV(
+        base_model,
+        param_grid,
+        cv=5,
+        scoring='accuracy',
+        n_jobs=-1,
+        verbose=1
+    )
+    
+    grid_search.fit(X_train, y_train)
+    
+    print(f"\nBest parameters: {grid_search.best_params_}")
+    print(f"Best CV score: {grid_search.best_score_:.4f}")
+    
+    return grid_search.best_estimator_
 
 
-def train_random_forest(X_train, y_train):
+def train_random_forest(X_train, y_train):    
     preprocessor = _build_preprocessor(X_train)
-    clf = RandomForestClassifier(n_estimators=300, random_state=42)
-
-    model = Pipeline(steps=[
+    
+    param_grid = {
+        'model__n_estimators': [50, 100],
+        'model__max_depth': [5, 10, None],
+        'model__min_samples_split': [2, 5],
+        'model__min_samples_leaf': [1, 2],
+    }
+    
+    base_model = Pipeline(steps=[
         ("preprocess", preprocessor),
-        ("model", clf),
+        ("model", RandomForestClassifier(random_state=42)),
     ])
-    model.fit(X_train, y_train)
-    return model
+    
+    grid_search = GridSearchCV(
+        base_model,
+        param_grid,
+        cv=5,
+        scoring='accuracy',
+        n_jobs=-1,
+        verbose=1
+    )
+    
+    grid_search.fit(X_train, y_train)
+    
+    print(f"\nBest parameters: {grid_search.best_params_}")
+    print(f"Best CV score: {grid_search.best_score_:.4f}")
+    
+    return grid_search.best_estimator_

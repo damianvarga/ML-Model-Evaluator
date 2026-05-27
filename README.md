@@ -36,6 +36,7 @@ The dataset used is a synthetic Titanic-style dataset designed to simulate reali
   - F1-score
   - Accuracy
 - Cross-validation support (K-Fold CV)
+- Hyperparameter tuning with GridSearchCV
 - Experiment tracking system (logs results to CSV)
 - Reproducible synthetic dataset generation
 - Docker support for reproducible environments
@@ -169,7 +170,6 @@ Best model: LogisticRegression (accuracy=0.6400)
 
 ## Future Improvements
 
-- Hyperparameter tuning with GridSearchCV
 - Additional models (XGBoost, SVM, KNN)
 - MLflow integration for advanced experiment tracking
 - Feature importance visualization
