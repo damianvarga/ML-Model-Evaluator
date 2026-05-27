@@ -137,33 +137,44 @@ docker run --rm ml-model-pipeline
 ## Example Output
 
 ```text
-              precision    recall  f1-score   support
+Fitting 5 folds for each of 16 candidates, totalling 80 fits
+Best parameters: {'model__C': 0.1, 'model__l1_ratio': 0, 'model__max_iter': 1000, 'model__solver': 'lbfgs'}
+Best CV score: 0.6650
 
-           0       0.65      0.48      0.55        46
-           1       0.64      0.78      0.70        54
-
-    accuracy                           0.64       100
-   macro avg       0.64      0.63      0.62       100
-weighted avg       0.64      0.64      0.63       100
-
-Logged LogisticRegression | acc=0.6400 | cv=0.6725 ± 0.0414
-LogisticRegression accuracy: 0.6400
-----------------------------------------------------------------------
+Fitting 5 folds for each of 24 candidates, totalling 120 fits
+Best parameters: {'model__max_depth': 5, 'model__min_samples_leaf': 2, 'model__min_samples_split': 5, 'model__n_estimators': 100}
+Best CV score: 0.6550
 
               precision    recall  f1-score   support
 
-           0       0.43      0.35      0.39        46
-           1       0.52      0.61      0.56        54
+           0       0.73      0.59      0.65        46
+           1       0.70      0.81      0.75        54
 
-    accuracy                           0.49       100
-   macro avg       0.48      0.48      0.47       100
-weighted avg       0.48      0.49      0.48       100
+    accuracy                           0.71       100
+   macro avg       0.71      0.70      0.70       100
+weighted avg       0.71      0.71      0.71       100
 
-Logged RandomForest | acc=0.4900 | cv=0.6000 ± 0.0250
-RandomForest accuracy: 0.4900
+Logged LogisticRegression | acc=0.7100 | CV=0.6650 ± 0.0429
+LogisticRegression accuracy: 0.7100
 ----------------------------------------------------------------------
+              precision    recall  f1-score   support
 
-Best model: LogisticRegression (accuracy=0.6400)
+           0       0.59      0.59      0.59        46
+           1       0.65      0.65      0.65        54
+
+    accuracy                           0.62       100
+   macro avg       0.62      0.62      0.62       100
+weighted avg       0.62      0.62      0.62       100
+
+Logged RandomForest | acc=0.6200 | CV=0.6550 ± 0.0430
+RandomForest accuracy: 0.6200
+----------------------------------------------------------------------
+Best model: LogisticRegression (accuracy=0.7100)
+
+Sample predictions (1=survived, 0=did not survive):
+{'age': 25, 'sex': 'female', 'fare': 80.0, 'class': 'first'} => pred=1 prob=0.764
+{'age': 40, 'sex': 'male', 'fare': 15.0, 'class': 'third'} => pred=0 prob=0.290
+{'age': 6, 'sex': 'female', 'fare': 30.0, 'class': 'second'} => pred=1 prob=0.631
 ```
 
 ---

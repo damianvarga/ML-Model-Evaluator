@@ -33,4 +33,4 @@ def log_experiment(model_name, accuracy, model=None, X_train=None, y_train=None)
 
     df.to_csv("experiments.csv", index=False)
 
-    print(f"Logged {model_name} | acc={accuracy:.4f} | cv={cv_mean:.4f} ± {cv_std:.4f}")
+    print(f"Logged {model_name} | acc={accuracy:.4f} | CV={cv_mean:.4f} ± {cv_std:.4f}")

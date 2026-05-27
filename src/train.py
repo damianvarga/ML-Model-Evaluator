@@ -58,8 +58,8 @@ def train_logistic(X_train, y_train):
     
     grid_search.fit(X_train, y_train)
     
-    print(f"\nBest parameters: {grid_search.best_params_}")
-    print(f"Best CV score: {grid_search.best_score_:.4f}")
+    print(f"Best parameters: {grid_search.best_params_}")
+    print(f"Best CV score: {grid_search.best_score_:.4f}\n")
     
     return grid_search.best_estimator_
 
@@ -90,7 +90,6 @@ def train_random_forest(X_train, y_train):
     
     grid_search.fit(X_train, y_train)
     
-    print(f"\nBest parameters: {grid_search.best_params_}")
-    print(f"Best CV score: {grid_search.best_score_:.4f}")
-    
+    print(f"Best parameters: {grid_search.best_params_}")
+    print(f"Best CV score: {grid_search.best_score_:.4f}\n")
     return grid_search.best_estimator_
