@@ -77,6 +77,13 @@ pip install -r requirements.txt
 python main.py
 ```
 
+Or using Docker
+
+```
+docker build -t ml-model-pipeline .
+docker run --rm ml-model-pipeline
+```
+
 ## Example output
 
 LogisticRegression accuracy: 0.7400 \
