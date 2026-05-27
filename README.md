@@ -2,7 +2,7 @@
 
 A lightweight machine learning framework for training, comparing, and tracking classification models using structured pipelines.
 
-This project demonstrates a complete ML workflow including preprocessing, model training, evaluation, and experiment tracking.
+This project demonstrates a complete ML workflow including preprocessing, model training, evaluation, cross-validation, and experiment tracking.
 
 ---
 
@@ -13,6 +13,7 @@ The goal of this project is to build a reusable and modular machine learning pip
 - Load and preprocess structured tabular data
 - Train multiple classification models
 - Evaluate model performance consistently
+- Perform cross-validation for robust evaluation
 - Track experiments for comparison
 
 The dataset used is a synthetic Titanic-style dataset designed to simulate realistic classification features.
@@ -34,6 +35,7 @@ The dataset used is a synthetic Titanic-style dataset designed to simulate reali
   - Recall
   - F1-score
   - Accuracy
+- Cross-validation support (K-Fold CV)
 - Experiment tracking system (logs results to CSV)
 - Reproducible synthetic dataset generation
 - Docker support for reproducible environments
@@ -49,31 +51,46 @@ The dataset used is a synthetic Titanic-style dataset designed to simulate reali
 
 ## Evaluation Metrics
 
-- Accuracy
+- Accuracy (test set)
+- Cross-validation mean accuracy (cv_mean)
+- Cross-validation standard deviation (cv_std)
 - Precision
 - Recall
 - F1-score
 
 ---
 
+## Cross-Validation
+
+This project uses **K-Fold Cross-Validation (default: 5 folds)** to improve evaluation reliability.
+
+Instead of relying on a single train/test split, models are evaluated across multiple folds to measure:
+
+- General performance (cv_mean)
+- Stability across datasets (cv_std)
+
+---
+
 ## Project Structure
 
-data/ \
-dataset.csv # Synthetic dataset
+```text
+data/
+└── dataset.csv                 # Synthetic dataset
 
-src/ \
-load_data.py # Data loading utilities \
-preprocess.py # Train/test split + validation \
-train.py # Model pipelines and training \
-evaluate.py # Evaluation metrics \
-tracker.py # Experiment logging system \
-create_dataset.py # Dataset generator (optional) 
+src/
+├── load_data.py                # Data loading utilities
+├── preprocess.py               # Train/test split + validation
+├── train.py                    # Model pipelines and training
+├── evaluate.py                 # Evaluation metrics
+├── tracker.py                  # Experiment logging system (CV included)
+└── create_dataset.py           # Dataset generator (optional)
 
-main.py # Pipeline entry point \
-experiments.csv # Logged experiment results \
-Dockerfile # Dockerfile for reproducible environments \
-requirements.txt # Project dependencies \
-README.md # Project documentation
+main.py                         # Pipeline entry point
+experiments.csv                 # Logged experiment results
+Dockerfile                      # Docker setup
+requirements.txt                # Project dependencies
+README.md                       # Documentation
+```
 
 ---
 
@@ -121,46 +138,45 @@ docker run --rm ml-model-pipeline
 ```text
               precision    recall  f1-score   support
 
-           0       0.67      0.61      0.64        46
-           1       0.69      0.74      0.71        54
+           0       0.65      0.48      0.55        46
+           1       0.64      0.78      0.70        54
 
-    accuracy                           0.68       100
-   macro avg       0.68      0.67      0.68       100
-weighted avg       0.68      0.68      0.68       100
+    accuracy                           0.64       100
+   macro avg       0.64      0.63      0.62       100
+weighted avg       0.64      0.64      0.63       100
 
-LogisticRegression accuracy: 0.6800
+Logged LogisticRegression | acc=0.6400 | cv=0.6725 ± 0.0414
+LogisticRegression accuracy: 0.6400
 ----------------------------------------------------------------------
+
               precision    recall  f1-score   support
 
-           0       0.48      0.57      0.52        46
-           1       0.57      0.48      0.52        54
+           0       0.43      0.35      0.39        46
+           1       0.52      0.61      0.56        54
 
-    accuracy                           0.52       100
-   macro avg       0.52      0.52      0.52       100
-weighted avg       0.53      0.52      0.52       100
+    accuracy                           0.49       100
+   macro avg       0.48      0.48      0.47       100
+weighted avg       0.48      0.49      0.48       100
 
-RandomForest accuracy: 0.5200
+Logged RandomForest | acc=0.4900 | cv=0.6000 ± 0.0250
+RandomForest accuracy: 0.4900
 ----------------------------------------------------------------------
-Best model: LogisticRegression (accuracy=0.6800)
 
-Sample predictions (1=survived, 0=did not survive):
-{'age': 25, 'sex': 'female', 'fare': 80.0, 'class': 'first'} => pred=1 prob=0.812
-{'age': 40, 'sex': 'male', 'fare': 15.0, 'class': 'third'} => pred=0 prob=0.224
-{'age': 6, 'sex': 'female', 'fare': 30.0, 'class': 'second'} => pred=1 prob=0.675
+Best model: LogisticRegression (accuracy=0.6400)
 ```
 
 ---
 
 ## Future Improvements
 
-- Cross-validation support
 - Hyperparameter tuning with GridSearchCV
 - Additional models (XGBoost, SVM, KNN)
-- MLflow integration
+- MLflow integration for advanced experiment tracking
 - Feature importance visualization
 - Model persistence with joblib
 - REST API deployment using FastAPI
 - Unit testing with pytest
+- Enhanced cross-validation reporting (per-fold logging)
 
 ---
 

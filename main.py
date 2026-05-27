@@ -23,7 +23,7 @@ def main():
     for name, model in models.items():
         acc = evaluate(model, X_test, y_test)
         scores[name] = acc
-        log_experiment(name, acc)
+        log_experiment(name, acc, model, X_train, y_train)
         print(f"{name} accuracy: {acc:.4f}")
         print("-" * 70)
     # Select best model
