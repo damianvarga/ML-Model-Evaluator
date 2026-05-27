@@ -25,7 +25,7 @@ def main():
         scores[name] = acc
         log_experiment(name, acc)
         print(f"{name} accuracy: {acc:.4f}")
-
+        print("-" * 70)
     # Select best model
     best_name = max(scores, key=scores.get)
     best_model = models[best_name]

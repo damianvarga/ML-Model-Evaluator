@@ -86,14 +86,36 @@ docker run --rm ml-model-pipeline
 
 ## Example output
 
-LogisticRegression accuracy: 0.7400 \
-RandomForest accuracy: 0.5900 \
-Best model: LogisticRegression (accuracy=0.7400)
+```
+              precision    recall  f1-score   support
 
-Sample predictions (1=survived, 0=did not survive): \
-{'age': 25, 'sex': 'female', 'fare': 80.0, 'class': 'first'} => pred=1 prob=0.810 \
-{'age': 40, 'sex': 'male', 'fare': 15.0, 'class': 'third'} => pred=0 prob=0.272 \
-{'age': 6, 'sex': 'female', 'fare': 30.0, 'class': 'second'} => pred=1 prob=0.628
+           0       0.67      0.61      0.64        46
+           1       0.69      0.74      0.71        54
+
+    accuracy                           0.68       100
+   macro avg       0.68      0.67      0.68       100
+weighted avg       0.68      0.68      0.68       100
+
+LogisticRegression accuracy: 0.6800
+----------------------------------------------------------------------
+              precision    recall  f1-score   support
+
+           0       0.48      0.57      0.52        46
+           1       0.57      0.48      0.52        54
+
+    accuracy                           0.52       100
+   macro avg       0.52      0.52      0.52       100
+weighted avg       0.53      0.52      0.52       100
+
+RandomForest accuracy: 0.5200
+----------------------------------------------------------------------
+Best model: LogisticRegression (accuracy=0.6800)
+
+Sample predictions (1=survived, 0=did not survive):
+{'age': 25, 'sex': 'female', 'fare': 80.0, 'class': 'first'} => pred=1 prob=0.812
+{'age': 40, 'sex': 'male', 'fare': 15.0, 'class': 'third'} => pred=0 prob=0.224
+{'age': 6, 'sex': 'female', 'fare': 30.0, 'class': 'second'} => pred=1 prob=0.675
+```
 
 ## Author
 
