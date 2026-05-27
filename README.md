@@ -29,8 +29,14 @@ The dataset used is a synthetic Titanic-style dataset designed to simulate reali
 - Model comparison:
   - Logistic Regression
   - Random Forest Classifier
+- Classification report generation:
+  - Precision
+  - Recall
+  - F1-score
+  - Accuracy
 - Experiment tracking system (logs results to CSV)
 - Reproducible synthetic dataset generation
+- Docker support for reproducible environments
 
 ---
 
@@ -39,9 +45,14 @@ The dataset used is a synthetic Titanic-style dataset designed to simulate reali
 - Logistic Regression
 - Random Forest Classifier
 
-### Evaluation Metric
+---
+
+## Evaluation Metrics
 
 - Accuracy
+- Precision
+- Recall
+- F1-score
 
 ---
 
@@ -59,34 +70,55 @@ tracker.py # Experiment logging system \
 create_dataset.py # Dataset generator (optional) 
 
 main.py # Pipeline entry point \
-experiments.csv # Logged experiment results
+experiments.csv # Logged experiment results \
+Dockerfile # Dockerfile for reproducible environments \
+requirements.txt # Project dependencies \
+README.md # Project documentation
 
 ---
 
 ## Installation & Usage
 
-### 1. Install dependencies
+### 1. Clone the repository
+
+```bash
+git clone <your-repo-url>
+cd ml-model-comparison-pipeline
+```
+
+### 2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Run the pipeline
+### 3. Run the pipeline
 
 ```bash
 python main.py
 ```
 
-Or using Docker
+---
 
-```
+## Running with Docker
+
+### Build the Docker image
+
+```bash
 docker build -t ml-model-pipeline .
+```
+
+### Run the container
+
+```bash
 docker run --rm ml-model-pipeline
 ```
 
-## Example output
+---
 
-```
+## Example Output
+
+```text
               precision    recall  f1-score   support
 
            0       0.67      0.61      0.64        46
@@ -117,13 +149,31 @@ Sample predictions (1=survived, 0=did not survive):
 {'age': 6, 'sex': 'female', 'fare': 30.0, 'class': 'second'} => pred=1 prob=0.675
 ```
 
+---
+
+## Future Improvements
+
+- Cross-validation support
+- Hyperparameter tuning with GridSearchCV
+- Additional models (XGBoost, SVM, KNN)
+- MLflow integration
+- Feature importance visualization
+- Model persistence with joblib
+- REST API deployment using FastAPI
+- Unit testing with pytest
+
+---
+
 ## Author
 
-This project was independently developed as a machine learning learning and experimentation framework.
+This project was independently developed as a machine learning experimentation and model comparison framework.
 
-AI tools (e.g., ChatGPT, GitHub Copilot) were used as coding assistance for debugging and implementation support.
+AI tools (e.g., ChatGPT and GitHub Copilot) were used for debugging assistance and implementation support.
+
+---
 
 ## Notes
 
-Dataset is synthetic but structured to mimic real-world classification problems. 
-The project is designed for learning, experimentation, and model comparison workflows.
+The dataset is synthetic but structured to mimic realistic classification problems.
+
+This project is intended for learning, experimentation, and demonstrating end-to-end machine learning workflows.
