@@ -39,7 +39,6 @@ def log_experiment(model_name, accuracy, model=None, X_train=None, y_train=None)
         df = pd.concat([old, df], ignore_index=True)
     except FileNotFoundError:
         pass
-    print(df)
     df.to_csv(CSV_PATH, index=False)
 
     if cv_mean is not None:

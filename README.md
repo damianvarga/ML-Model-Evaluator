@@ -140,12 +140,12 @@ docker run -v %cd%:/app --rm ml-model-pipeline
 
 Git Bash
 ```bash
-docker run -v "$(pwd):/app" --rm ml-model-pipeline
+docker run -v "$(pwd -W):/app" --rm ml-model-pipeline
 ```
 
 Linux Terminal
 ```bash
-docker run -v $(pwd):/app --rm ml-model-pipeline
+docker run -v "$(pwd -W):/app" --rm ml-model-pipeline
 ```
 
 This is to make sure that the logs appear in experiments.csv. If you do not care about logging, you can use
