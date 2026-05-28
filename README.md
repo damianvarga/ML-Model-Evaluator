@@ -128,9 +128,32 @@ docker build -t ml-model-pipeline .
 
 ### Run the container
 
+PowerShell/VS Code Terminal
 ```bash
-docker run --rm ml-model-pipeline
+docker run -v ${PWD}:/app --rm ml-model-pipeline
 ```
+
+CMD
+```bash
+docker run -v %cd%:/app --rm ml-model-pipeline
+```
+
+Git Bash
+```bash
+docker run -v "$(pwd):/app" --rm ml-model-pipeline
+```
+
+Linux Terminal
+```bash
+docker run -v $(pwd):/app --rm ml-model-pipeline
+```
+
+This is to make sure that the logs appear in experiments.csv. If you do not care about logging, you can use
+```bash 
+docker run --rm ml-model-pipeline   
+```
+
+This command works faster than the upper commands, but skips the logging process into the CSV file.
 
 ---
 
