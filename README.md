@@ -38,7 +38,7 @@ The dataset used is a synthetic Titanic-style dataset designed to simulate reali
   - Accuracy
 - Cross-validation support (K-Fold CV)
 - Hyperparameter tuning with GridSearchCV
-- Experiment tracking system (logs results to CSV + MLflow)
+- Experiment tracking system (logs results to CSV + MLflow) — MLflow UI available at `http://localhost:5000` (in progress)
 - Best model persistence with joblib
 - REST API built with FastAPI:
   - `GET /` — health check
@@ -240,6 +240,7 @@ Sample predictions (1=survived, 0=did not survive):
 
 ## Future Improvements
 
+- Fix MLFlow integration
 - Additional models (XGBoost, SVM, KNN)
 - Feature importance visualization
 - Unit testing with pytest
