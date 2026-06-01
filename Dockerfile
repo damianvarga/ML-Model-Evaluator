@@ -24,8 +24,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project files
 COPY . .
 
-# Create models directory (optional)
+# Create models directory
 RUN mkdir -p models
 
-# Run the pipeline
-CMD ["python", "main.py"]
+# Train the model if needed, then run the API
+CMD ["python", "docker-entrypoint.py"]

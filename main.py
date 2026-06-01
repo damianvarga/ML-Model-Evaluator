@@ -3,7 +3,7 @@ from src.load_data import load_data
 from src.preprocess import split_data
 from src.train import train_logistic, train_random_forest
 from src.evaluate import evaluate
-from src.tracker import log_experiment
+from src.tracker import log_experiment, log_mlflow
 
 
 def main():
@@ -21,14 +21,26 @@ def main():
     # Evaluate and log
     scores = {}
     for name, model in models.items():
-        acc = evaluate(model, X_test, y_test)
+        acc = evaluate(model.best_estimator_, X_test, y_test)
         scores[name] = acc
-        log_experiment(name, acc, model, X_train, y_train)
+        cv_mean, cv_std = log_experiment(name, acc, model.best_estimator_, X_train, y_train)
+        try:
+            log_mlflow(
+                model=model.best_estimator_,
+                model_name=name,
+                accuracy=acc,
+                cv_mean=cv_mean,
+                cv_std=cv_std,
+                params=model.best_params_
+            )
+        except Exception as exc:
+            print(f"MLflow logging skipped for {name}: {exc}")
         print(f"{name} accuracy: {acc:.4f}")
         print("-" * 70)
+
     # Select best model
     best_name = max(scores, key=scores.get)
-    best_model = models[best_name]
+    best_model = models[best_name].best_estimator_
     print(f"Best model: {best_name} (accuracy={scores[best_name]:.4f})")
 
     # Demonstrate predictions for sample passengers
@@ -42,6 +54,11 @@ def main():
         probs = best_model.predict_proba(samples)[:, 1]
     else:
         probs = [None] * len(preds)
+
+    import joblib
+    from os import makedirs
+    makedirs("models", exist_ok=True)
+    joblib.dump(best_model, "models/best_model.pkl")
 
     print("\nSample predictions (1=survived, 0=did not survive):")
     for i, row in samples.iterrows():

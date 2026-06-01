@@ -1,8 +1,8 @@
 # ML Model Comparison Pipeline
 
-A lightweight machine learning framework for training, comparing, and tracking classification models using structured pipelines.
+A lightweight machine learning framework for training, comparing, and tracking classification models with a REST API for serving predictions.
 
-This project demonstrates a complete ML workflow including preprocessing, model training, evaluation, cross-validation, and experiment tracking.
+This project demonstrates a complete ML workflow including preprocessing, model training, evaluation, cross-validation, experiment tracking, and API deployment with FastAPI.
 
 ---
 
@@ -15,6 +15,7 @@ The goal of this project is to build a reusable and modular machine learning pip
 - Evaluate model performance consistently
 - Perform cross-validation for robust evaluation
 - Track experiments for comparison
+- Serve predictions via a FastAPI REST API
 
 The dataset used is a synthetic Titanic-style dataset designed to simulate realistic classification features.
 
@@ -22,7 +23,7 @@ The dataset used is a synthetic Titanic-style dataset designed to simulate reali
 
 ## Features
 
-- End-to-end ML pipeline (data → preprocessing → training → evaluation)
+- End-to-end ML pipeline (data → preprocessing → training → evaluation → API)
 - Automatic handling of categorical and numerical features
 - Feature preprocessing:
   - OneHot encoding for categorical variables
@@ -37,7 +38,11 @@ The dataset used is a synthetic Titanic-style dataset designed to simulate reali
   - Accuracy
 - Cross-validation support (K-Fold CV)
 - Hyperparameter tuning with GridSearchCV
-- Experiment tracking system (logs results to CSV)
+- Experiment tracking system (logs results to CSV + MLflow)
+- Best model persistence with joblib
+- REST API built with FastAPI:
+  - `GET /` — health check
+  - `POST /predict` — predict survival for a passenger
 - Reproducible synthetic dataset generation
 - Docker support for reproducible environments
 
@@ -78,15 +83,20 @@ Instead of relying on a single train/test split, models are evaluated across mul
 data/
 └── dataset.csv                 # Synthetic dataset
 
+models/
+└── best_model.pkl              # Trained best model (saved by joblib)
+
 src/
+├── api.py                      # FastAPI app (GET /, POST /predict)
+├── create_dataset.py           # Dataset generator (optional)
+├── evaluate.py                 # Evaluation metrics
 ├── load_data.py                # Data loading utilities
 ├── preprocess.py               # Train/test split + validation
-├── train.py                    # Model pipelines and training
-├── evaluate.py                 # Evaluation metrics
-├── tracker.py                  # Experiment logging system (CV included)
-└── create_dataset.py           # Dataset generator (optional)
+├── tracker.py                  # Experiment logging system (CSV + MLflow)
+└── train.py                    # Model pipelines and training
 
-main.py                         # Pipeline entry point
+docker-entrypoint.py            # Docker entrypoint (trains model if missing, then starts API)
+main.py                         # Pipeline entry point (train, evaluate, select best, save model)
 experiments.csv                 # Logged experiment results
 Dockerfile                      # Docker setup
 requirements.txt                # Project dependencies
@@ -110,15 +120,62 @@ cd ml-model-comparison-pipeline
 pip install -r requirements.txt
 ```
 
-### 3. Run the pipeline
+### 3. Train models and save the best one
 
 ```bash
 python main.py
 ```
 
+This trains both models, evaluates them, selects the best, and saves it to `models/best_model.pkl`.
+
+### 4. Run the API
+
+```bash
+python -m uvicorn src.api:app --host 0.0.0.0 --port 8000
+```
+
+---
+
+## API Endpoints
+
+### `GET /`
+
+Returns a health check message.
+
+**Response:**
+```json
+{"message": "ML Model API running"}
+```
+
+### `POST /predict`
+
+Predicts survival for a passenger based on their features.
+
+**Request body:**
+```json
+{
+  "age": 25,
+  "sex": "female",
+  "fare": 80.0,
+  "class_name": "first"
+}
+```
+
+**Response:**
+```json
+{
+  "prediction": 1,
+  "survival_probability": 0.7647
+}
+```
+
+`prediction` is `1` (survived) or `0` (did not survive). `survival_probability` is the model's probability estimate for the positive class.
+
 ---
 
 ## Running with Docker
+
+The Docker container automatically trains the model (if not already saved) and starts the API on port 8000.
 
 ### Build the Docker image
 
@@ -128,32 +185,11 @@ docker build -t ml-model-pipeline .
 
 ### Run the container
 
-PowerShell/VS Code Terminal
 ```bash
-docker run -v ${PWD}:/app --rm ml-model-pipeline
+docker run -p 8000:8000 --rm ml-model-pipeline
 ```
 
-CMD
-```bash
-docker run -v %cd%:/app --rm ml-model-pipeline
-```
-
-Git Bash
-```bash
-docker run -v "$(pwd -W):/app" --rm ml-model-pipeline
-```
-
-Linux Terminal
-```bash
-docker run -v "$(pwd -W):/app" --rm ml-model-pipeline
-```
-
-This is to make sure that the logs appear in experiments.csv. If you do not care about logging, you can use
-```bash 
-docker run --rm ml-model-pipeline   
-```
-
-This command works faster than the upper commands, but skips the logging process into the CSV file.
+The API will be available at `http://localhost:8000`.
 
 ---
 
@@ -205,12 +241,11 @@ Sample predictions (1=survived, 0=did not survive):
 ## Future Improvements
 
 - Additional models (XGBoost, SVM, KNN)
-- MLflow integration for advanced experiment tracking
 - Feature importance visualization
-- Model persistence with joblib
-- REST API deployment using FastAPI
 - Unit testing with pytest
 - Enhanced cross-validation reporting (per-fold logging)
+- API authentication and rate limiting
+- CI/CD integration
 
 ---
 
