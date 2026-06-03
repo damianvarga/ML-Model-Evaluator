@@ -245,7 +245,6 @@ Sample predictions (1=survived, 0=did not survive):
 
 ## Future Improvements
 
-- Fix MLFlow integration
 - Additional models (XGBoost, SVM, KNN)
 - Feature importance visualization
 - Unit testing with pytest
