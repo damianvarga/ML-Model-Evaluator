@@ -38,7 +38,7 @@ The dataset used is a synthetic Titanic-style dataset designed to simulate reali
   - Accuracy
 - Cross-validation support (K-Fold CV)
 - Hyperparameter tuning with GridSearchCV
-- Experiment tracking system (logs results to CSV + MLflow) — MLflow UI available at `http://localhost:5000` (in progress)
+- Experiment tracking system (logs results to CSV + MLflow) — MLflow UI available at `http://localhost:5000`
 - Best model persistence with joblib
 - REST API built with FastAPI:
   - `GET /` — health check
@@ -128,11 +128,36 @@ python main.py
 
 This trains both models, evaluates them, selects the best, and saves it to `models/best_model.pkl`.
 
-### 4. Run the API
+### 4. Run the API with Docker (Recommended)
+
+The Docker container automatically trains the model (if not already saved) and starts the API on port 8000.
+
+```bash
+docker build -t ml-model-pipeline .
+docker run -p 8000:8000 --rm ml-model-pipeline
+```
+
+The API will be available at `http://localhost:8000`.
+
+
+### 5. Run the API directly (Alternative)
+
+If you do not wish to use Docker, you can start the API directly.
 
 ```bash
 python -m uvicorn src.api:app --host 0.0.0.0 --port 8000
 ```
+
+### 6. Start MLflow UI (optional)
+
+```bash
+python -m mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./mlruns --host 127.0.0.1 --port 5000
+```
+
+The MLflow UI will be available at `http://localhost:5000`.
+
+View stats by clicking on "Experiments" -> "ml-model-comparison" -> "Training runs" -> <model name>.
+
 
 ---
 
@@ -170,26 +195,6 @@ Predicts survival for a passenger based on their features.
 ```
 
 `prediction` is `1` (survived) or `0` (did not survive). `survival_probability` is the model's probability estimate for the positive class.
-
----
-
-## Running with Docker
-
-The Docker container automatically trains the model (if not already saved) and starts the API on port 8000.
-
-### Build the Docker image
-
-```bash
-docker build -t ml-model-pipeline .
-```
-
-### Run the container
-
-```bash
-docker run -p 8000:8000 --rm ml-model-pipeline
-```
-
-The API will be available at `http://localhost:8000`.
 
 ---
 
@@ -254,7 +259,7 @@ Sample predictions (1=survived, 0=did not survive):
 
 This project was independently developed as a machine learning experimentation and model comparison framework.
 
-AI tools (e.g., ChatGPT and GitHub Copilot) were used for debugging assistance and implementation support.
+AI tools (ChatGPT, GitHub Copilot, ...) were used for debugging assistance and implementation support.
 
 ---
 
