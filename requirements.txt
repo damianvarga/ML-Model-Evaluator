@@ -7,3 +7,4 @@ mlflow>=3.0,<4.0
 protobuf>=4.25,<5.0
 fastapi
 uvicorn
+pytest>=8.0,<9.0

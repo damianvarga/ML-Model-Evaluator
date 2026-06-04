@@ -95,6 +95,14 @@ src/
 ├── tracker.py                  # Experiment logging system (CSV + MLflow)
 └── train.py                    # Model pipelines and training
 
+tests/
+├── conftest.py                 # Shared fixtures (sample DataFrame, mock model)
+├── test_evaluate.py            # Tests for evaluation metrics
+├── test_load_data.py           # Tests for data loading
+├── test_preprocess.py          # Tests for train/test split
+├── test_tracker.py             # Tests for experiment logging
+└── test_train.py               # Tests for model training pipelines
+
 docker-entrypoint.py            # Docker entrypoint (trains model if missing, then starts API)
 main.py                         # Pipeline entry point (train, evaluate, select best, save model)
 experiments.csv                 # Logged experiment results
@@ -148,7 +156,13 @@ If you do not wish to use Docker, you can start the API directly.
 python -m uvicorn src.api:app --host 0.0.0.0 --port 8000
 ```
 
-### 6. Start MLflow UI (optional)
+### 6. Run tests
+
+```bash
+python -m pytest tests/ -v
+```
+
+### 7. Start MLflow UI (optional)
 
 ```bash
 python -m mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./mlruns --host 127.0.0.1 --port 5000
@@ -201,6 +215,7 @@ Predicts survival for a passenger based on their features.
 ## Example Output
 
 ```text
+models/best_model.pkl not found. Training model first...
 Fitting 5 folds for each of 16 candidates, totalling 80 fits
 Best parameters: {'model__C': 0.1, 'model__l1_ratio': 0, 'model__max_iter': 1000, 'model__solver': 'lbfgs'}
 Best CV score: 0.6650
@@ -247,7 +262,6 @@ Sample predictions (1=survived, 0=did not survive):
 
 - Additional models (XGBoost, SVM, KNN)
 - Feature importance visualization
-- Unit testing with pytest
 - Enhanced cross-validation reporting (per-fold logging)
 - API authentication and rate limiting
 - CI/CD integration
