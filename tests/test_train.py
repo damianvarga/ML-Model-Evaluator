@@ -1,6 +1,6 @@
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from src.train import _build_preprocessor, train_logistic, train_random_forest
+from src.train import _build_preprocessor, train_logistic, train_random_forest, train_xgboost
 
 
 class TestBuildPreprocessor:
@@ -31,6 +31,16 @@ class TestTrainRandomForest:
         X = sample_df.drop(columns=["survived"])
         y = sample_df["survived"]
         gs = train_random_forest(X, y)
+        assert hasattr(gs, "best_estimator_")
+        assert hasattr(gs, "best_params_")
+        assert gs.best_score_ > 0
+
+
+class TestTrainXGBoost:
+    def test_returns_fitted_gridsearch(self, sample_df):
+        X = sample_df.drop(columns=["survived"])
+        y = sample_df["survived"]
+        gs = train_xgboost(X, y)
         assert hasattr(gs, "best_estimator_")
         assert hasattr(gs, "best_params_")
         assert gs.best_score_ > 0

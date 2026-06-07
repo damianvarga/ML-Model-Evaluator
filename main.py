@@ -1,7 +1,7 @@
 import pandas as pd
 from src.load_data import load_data
 from src.preprocess import split_data
-from src.train import train_logistic, train_random_forest
+from src.train import train_logistic, train_random_forest, train_xgboost
 from src.evaluate import evaluate
 from src.tracker import log_experiment, log_mlflow
 
@@ -12,10 +12,11 @@ def main():
     # Split using validated target
     X_train, X_test, y_train, y_test = split_data(df, "survived")
 
-    # Train both models
+    # Train all models
     models = {
         "LogisticRegression": train_logistic(X_train, y_train),
         "RandomForest": train_random_forest(X_train, y_train),
+        "XGBoost": train_xgboost(X_train, y_train),
     }
 
     # Evaluate and log

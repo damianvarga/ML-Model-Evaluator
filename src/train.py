@@ -93,3 +93,36 @@ def train_random_forest(X_train, y_train):
     print(f"Best parameters: {grid_search.best_params_}")
     print(f"Best CV score: {grid_search.best_score_:.4f}\n")
     return grid_search
+
+
+def train_xgboost(X_train, y_train):
+    import xgboost as xgb
+
+    preprocessor = _build_preprocessor(X_train)
+
+    param_grid = {
+        'model__n_estimators': [50, 100],
+        'model__max_depth': [3, 6, 10],
+        'model__learning_rate': [0.01, 0.1, 0.3],
+        'model__subsample': [0.8, 1.0],
+    }
+
+    base_model = Pipeline(steps=[
+        ("preprocess", preprocessor),
+        ("model", xgb.XGBClassifier(random_state=42)),
+    ])
+
+    grid_search = GridSearchCV(
+        base_model,
+        param_grid,
+        cv=5,
+        scoring='accuracy',
+        n_jobs=-1,
+        verbose=1
+    )
+
+    grid_search.fit(X_train, y_train)
+
+    print(f"Best parameters: {grid_search.best_params_}")
+    print(f"Best CV score: {grid_search.best_score_:.4f}\n")
+    return grid_search

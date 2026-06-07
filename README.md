@@ -164,6 +164,8 @@ python -m pytest tests/ -v
 
 ### 7. Start MLflow UI (optional)
 
+Currently broken.
+
 ```bash
 python -m mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./mlruns --host 127.0.0.1 --port 5000
 ```
@@ -260,6 +262,7 @@ Sample predictions (1=survived, 0=did not survive):
 
 ## Future Improvements
 
+- Fix MLFlow UI
 - Additional models (XGBoost, SVM, KNN)
 - Feature importance visualization
 - Enhanced cross-validation reporting (per-fold logging)

@@ -2,9 +2,10 @@ import pandas as pd
 from datetime import datetime
 from sklearn.model_selection import cross_val_score
 import numpy as np
-from os import path
+from os import path, makedirs
 import mlflow
 import mlflow.sklearn
+from mlflow.tracking import MlflowClient
 
 def log_experiment(model_name, accuracy, model=None, X_train=None, y_train=None):
 
@@ -50,40 +51,25 @@ def log_experiment(model_name, accuracy, model=None, X_train=None, y_train=None)
     
     return cv_mean, cv_std
 
-
-# def log_mlflow(model, model_name, accuracy, cv_mean=None, cv_std=None, params=None):
-
-#     mlflow.set_experiment("ml-model-comparison")
-
-#     with mlflow.start_run():
-
-#         # Log metrics
-#         mlflow.log_metric("accuracy", accuracy)
-
-#         if cv_mean is not None:
-#             mlflow.log_metric("cv_mean", cv_mean)
-
-#         if cv_std is not None:
-#             mlflow.log_metric("cv_std", cv_std)
-
-#         # Log parameters (GridSearch best params)
-#         if params:
-#             for k, v in params.items():
-#                 mlflow.log_param(k, v)
-
-#         # Log model
-#         mlflow.sklearn.log_model(model, model_name)
-
-#         print(f"MLflow logged: {model_name}")
+def _get_or_create_experiment(name="ml-model-comparison"):
+    client = MlflowClient()
+    experiment = client.get_experiment_by_name(name)
+    if experiment is None:
+        artifact_path = path.abspath(path.join("mlruns", name))
+        makedirs(artifact_path, exist_ok=True)
+        artifact_uri = "file:///" + artifact_path.replace("\\", "/")
+        experiment_id = client.create_experiment(
+            name=name,
+            artifact_location=artifact_uri,
+        )
+        experiment = client.get_experiment(experiment_id)
+    return experiment
 
 def log_mlflow(model, model_name, accuracy, cv_mean=None, cv_std=None, params=None):
 
-    # Set tracking URI to absolute path to avoid cwd issues
-    # BASE_DIR = path.dirname(path.abspath(__file__))
-    # MLRUNS_DIR = path.join(BASE_DIR, "..", "mlruns")
-    # mlflow.set_tracking_uri(f"file:{MLRUNS_DIR}")
     mlflow.set_tracking_uri("sqlite:///mlflow.db")
-    mlflow.set_experiment("ml-model-comparison")
+    experiment = _get_or_create_experiment()
+    mlflow.set_experiment(experiment.name)
 
     with mlflow.start_run(run_name=model_name):
 
@@ -98,6 +84,6 @@ def log_mlflow(model, model_name, accuracy, cv_mean=None, cv_std=None, params=No
         if params:
             mlflow.log_params(params)
 
-        mlflow.sklearn.log_model(model, "model")
+        mlflow.sklearn.log_model(sk_model=model, name="model")
 
         print(f"MLflow logged: {model_name}")

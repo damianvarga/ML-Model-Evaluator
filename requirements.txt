@@ -8,3 +8,4 @@ protobuf>=4.25,<5.0
 fastapi
 uvicorn
 pytest>=8.0,<9.0
+xgboost>=2.0,<3.0
