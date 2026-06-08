@@ -77,12 +77,13 @@ docker compose up --build
 ```
 
 This starts two services:
-- **app** — trains models (if needed), starts API
+- **app** — trains models if needed, saves the best model (if the best model is already saved, this part is skipped), starts API
 - **mlflow** — MLflow tracking server on `http://localhost:5000`
 
 Open `http://localhost:5000` to view experiments after training completes.
 
 > **Note:** The API endpoint at `localhost:8000` is currently non-functional and marked as a known issue (see Future Improvements).
+> **Note 2:** To train models even if `best_model.pkl` exists, set the `FORCE_TRAIN` environment variable to `true` (e.g., `docker compose run --rm -e FORCE_TRAIN=true app`). 
 
 ### 2. Run locally
 
