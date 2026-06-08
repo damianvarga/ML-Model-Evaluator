@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from datetime import datetime
 from sklearn.model_selection import cross_val_score
@@ -55,7 +56,8 @@ def _get_or_create_experiment(name="ml-model-comparison"):
     client = MlflowClient()
     experiment = client.get_experiment_by_name(name)
     if experiment is None:
-        artifact_path = path.abspath(path.join("mlruns", name))
+        artifact_root = os.getenv("MLFLOW_ARTIFACT_ROOT", path.join("mlruns", name))
+        artifact_path = path.abspath(artifact_root)
         makedirs(artifact_path, exist_ok=True)
         artifact_uri = "file:///" + artifact_path.replace("\\", "/")
         experiment_id = client.create_experiment(
@@ -67,7 +69,8 @@ def _get_or_create_experiment(name="ml-model-comparison"):
 
 def log_mlflow(model, model_name, accuracy, cv_mean=None, cv_std=None, params=None):
 
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
+    uri = os.getenv("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db")
+    mlflow.set_tracking_uri(uri)
     experiment = _get_or_create_experiment()
     mlflow.set_experiment(experiment.name)
 
@@ -84,6 +87,6 @@ def log_mlflow(model, model_name, accuracy, cv_mean=None, cv_std=None, params=No
         if params:
             mlflow.log_params(params)
 
-        mlflow.sklearn.log_model(sk_model=model, name="model")
+        mlflow.sklearn.log_model(sk_model=model, artifact_path="model")
 
         print(f"MLflow logged: {model_name}")
