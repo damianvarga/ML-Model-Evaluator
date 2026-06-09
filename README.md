@@ -147,7 +147,7 @@ Response:
 ## Future Improvements 
 
 - Fix API deployment — `localhost:8000` endpoint currently non-functional 
-- Additional models (XGBoost, SVM, KNN) 
+- Additional models (SVM, KNN) 
 - Feature importance visualization 
 - Enhanced cross-validation reporting (per-fold logging) 
 - API authentication and rate limiting 
