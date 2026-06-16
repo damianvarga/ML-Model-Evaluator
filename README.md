@@ -70,30 +70,42 @@ README.md
 
 ## Usage
 
-### 1. Run everything with Docker Compose (recommended)
+### 1. Run with Docker Compose (recommended)
 
 ```bash
 docker compose up --build
-```
+``` 
+<!-- mam otestovane vsetky prikazy s existujucim souborom best_model.pkl - funguje, ale nieco mi nedetegovalo best_model.pkl -->
 
-This starts two services:
-- **app** — trains models if needed, saves the best model (if the best model is already saved, this part is skipped), starts API
-- **mlflow** — MLflow tracking server on `http://localhost:5000`
+Starts two services:
+- **app** — trains model on first startup, serves API on port 8000
+- **mlflow** — MLflow tracking server on port 5000
 
-Open `http://localhost:5000` to view experiments after training completes.
+> **Note:** Set `FORCE_TRAIN=true` to retrain even if `best_model.pkl` exists:  
+> `$env:FORCE_TRAIN = "true"; docker compose up --build`
+> If you want to change it back, use `$env:FORCE_TRAIN = "false"; docker compose up --build`
+>   
+> **Note 2:** Alternatively, you can delete mlflow.db and models/best_model.pkl to force retraining.
 
-> **Note:** The API endpoint at `localhost:8000` is currently non-functional and marked as a known issue (see Future Improvements).
-> **Note 2:** To train models even if `best_model.pkl` exists, set the `FORCE_TRAIN` environment variable to `true` (e.g., `docker compose run --rm -e FORCE_TRAIN=true app`). 
 
 ### 2. Run locally
 
 ```bash
 pip install -r requirements.txt
-python main.py
-python -m uvicorn src.api:app --host 0.0.0.0
+uvicorn src.api:app --port 8000
 ```
 
-### 3. Tests
+This command starts only the API on port 8000.
+
+The model is auto-trained on the first API request if `models/best_model.pkl` is missing.
+
+### 3. Manual training (optional)
+
+```bash
+python main.py
+```
+
+### 4. Tests
 
 ```bash
 python -m pytest tests/ -v
@@ -105,13 +117,14 @@ python -m pytest tests/ -v
 
 | Variable | Default | Description |
 |---|---|---|
-| `MLFLOW_TRACKING_URI` | `sqlite:///mlflow.db` | MLflow tracking URI (set to `sqlite:///mlflow/mlflow.db` in Docker for shared DB) |
-| `MLFLOW_ARTIFACT_ROOT` | `mlruns/<experiment>` | Artifact storage path (set to `/mlflow/artifacts` in Docker) |
+| `MLFLOW_TRACKING_URI` | `sqlite:///mlflow.db` | MLflow tracking URI. For local runs, this can point directly to a SQLite database. In Docker, it is set to `http://mlflow:5000` so the application connects to the MLflow tracking server. |
+| `MLFLOW_ARTIFACT_ROOT` | `mlruns/` (local) | Artifact storage path (set to `/mlflow/artifacts` for the MLflow server in Docker) |
 | `FORCE_TRAIN` | *(unset)* | Set to `true` to retrain even if `best_model.pkl` exists |
 
 Example — force retraining in Docker:
 ```bash
-docker compose run --rm -e FORCE_TRAIN=true app
+# docker compose run --rm -e FORCE_TRAIN=true app
+$env:FORCE_TRAIN = "true"; docker compose up --build
 ```
 
 ---
@@ -146,7 +159,7 @@ Response:
 --- 
 ## Future Improvements 
 
-- Fix API deployment — `localhost:8000` endpoint currently non-functional 
+- Preserve experiment history when using Docker Compose
 - Additional models (SVM, KNN) 
 - Feature importance visualization 
 - Enhanced cross-validation reporting (per-fold logging) 

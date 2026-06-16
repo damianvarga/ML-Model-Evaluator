@@ -37,7 +37,7 @@ def train_logistic(X_train, y_train):
     
     param_grid = {
         'model__C': [0.1, 1, 10, 100],
-        'model__l1_ratio': [0],
+        # 'model__l1_ratio': [0],
         'model__solver': ['lbfgs', 'liblinear'],
         'model__max_iter': [1000, 2000],
     }

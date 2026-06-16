@@ -3,14 +3,34 @@ from pydantic import BaseModel
 import joblib
 import pandas as pd
 from pathlib import Path
+import subprocess
+import sys
+
+MODEL_PATH = Path(__file__).resolve().parents[1] / "models" / "best_model.pkl"
+_model = None
+
+
+def _ensure_model():
+    global _model
+    if _model is not None:
+        return
+    if not MODEL_PATH.exists():
+        print("Model not found. Training...")
+        subprocess.run([sys.executable, "main.py"], check=True)
+    _model = joblib.load(MODEL_PATH)
+    print(f"Loaded model from {MODEL_PATH}")
+
 
 app = FastAPI(
     title="ML Model Comparison API",
-    version="1.0"
+    version="1.0",
+    on_startup=[_ensure_model],
 )
 
-MODEL_PATH = Path(__file__).resolve().parents[1] / "models" / "best_model.pkl"
-model = joblib.load(MODEL_PATH)
+
+def _get_model():
+    global _model
+    return _model
 
 
 class Passenger(BaseModel):
@@ -35,9 +55,10 @@ def predict(passenger: Passenger):
         "class": passenger.class_name
     }])
 
-    prediction = model.predict(df)[0]
+    m = _get_model()
+    prediction = m.predict(df)[0]
 
-    probability = model.predict_proba(df)[0][1]
+    probability = m.predict_proba(df)[0][1]
 
     return {
         "prediction": int(prediction),
