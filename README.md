@@ -75,7 +75,6 @@ README.md
 ```bash
 docker compose up --build
 ``` 
-<!-- mam otestovane vsetky prikazy s existujucim souborom best_model.pkl - funguje, ale nieco mi nedetegovalo best_model.pkl -->
 
 Starts two services:
 - **app** — trains model on first startup, serves API on port 8000
