@@ -159,7 +159,6 @@ Response:
 --- 
 ## Future Improvements 
 
-- Preserve experiment history when using Docker Compose
 - Additional models (SVM, KNN) 
 - Feature importance visualization 
 - Enhanced cross-validation reporting (per-fold logging) 
