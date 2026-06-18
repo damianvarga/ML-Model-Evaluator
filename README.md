@@ -75,6 +75,7 @@ README.md
 ```bash
 docker compose up --build
 ``` 
+<!-- mam otestovane vsetky prikazy s existujucim suborom best_model.pkl - funguje, ale nieco mi nedetegovalo best_model.pkl -->
 
 Starts two services:
 - **app** — trains model on first startup, serves API on port 8000
@@ -98,13 +99,13 @@ This command starts only the API on port 8000.
 
 The model is auto-trained on the first API request if `models/best_model.pkl` is missing.
 
-### 3. Manual training (optional)
+<!-- ### 3. Manual training (optional)
 
 ```bash
 python main.py
-```
+``` -->
 
-### 4. Tests
+### 3. Tests
 
 ```bash
 python -m pytest tests/ -v
